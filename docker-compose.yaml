@@ -1,0 +1,37 @@
+# Docker Compose file for deploying a single-tier React application
+
+services:
+
+  # React Frontend Service
+  react-app:
+    # Use the latest image of the single-tier app
+    image: single-tier-app:latest
+
+    # Build the Docker image from the specified Dockerfile
+    build:
+      context: ./
+      dockerfile: Dockerfile
+
+    # Map container port 80 to host port 8080
+    ports:
+      - "8080:80"
+
+    # Connect the service to the custom bridge network
+    networks:
+      - single-tier-network
+
+    # Health check to ensure the service is running properly
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80"]  # Check if the app is reachable
+      interval: 30s                                       # Perform health check every 30 seconds
+      timeout: 10s                                        # Wait up to 10 seconds for a response
+      retries: 5                                          # Retry up to 5 times before marking as unhealthy
+      start_period: 30s                                   # Allow 30 seconds for the app to start before health checks begin
+
+    # Restart the container automatically if it crashes
+    restart: always
+
+# Define a custom bridge network for the service
+networks:
+  single-tier-network:
+    driver: bridge
