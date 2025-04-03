@@ -12,6 +12,9 @@ services:
       context: ./
       dockerfile: Dockerfile
 
+    # Container name for the Docker container
+    container_name: react-app
+
     # Map container port 80 to host port 8080
     ports:
       - "8080:80"
